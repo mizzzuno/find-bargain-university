@@ -1,14 +1,19 @@
 import universities from "../../data/universities.json";
 
 export default function handler(req, res) {
-  const { region, field } = req.query;
+  const { prefecture, facultyGenre } = req.query;
   let filtered = universities;
 
-  if (region && region !== "すべて") {
-    filtered = filtered.filter(u => u.region === region);
+  // 都道府県でフィルタ
+  if (prefecture && prefecture !== "すべて") {
+    filtered = filtered.filter((u) => u.region === prefecture);
   }
-  if (field && field !== "すべて") {
-    filtered = filtered.filter(u => u.field === field);
+
+  // 学部ジャンルでフィルタ
+  if (facultyGenre && facultyGenre !== "すべて") {
+    filtered = filtered.filter((u) =>
+      Object.keys(u.faculties).includes(facultyGenre)
+    );
   }
 
   res.status(200).json(filtered);
