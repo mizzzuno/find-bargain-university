@@ -13,6 +13,7 @@ const allPrefectures = [
 ];
 
 const genreOptions = [
+  'すべて',
   '情報系',
   '経済系',
 ];

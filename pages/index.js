@@ -27,7 +27,7 @@ export default function Home() {
       const flattened = [];
       data.forEach((uni) => {
         Object.entries(uni.faculties).forEach(([facultyName, courses]) => {
-          courses.forEach((course) => {
+          courses.filter(course => filters.courseGenre === "すべて" || course.genre === filters.courseGenre).forEach((course) => {
             flattened.push({
               key: `${uni.name}_${facultyName}_${course.name}`,
               name: `${uni.name} / ${facultyName} / ${course.name}`,
@@ -37,6 +37,7 @@ export default function Home() {
         });
       });
       setCourses(flattened);
+      console.log(data);
     };
 
     fetchData();
