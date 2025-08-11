@@ -12,27 +12,10 @@ const allPrefectures = [
   "熊本", "大分", "宮崎", "鹿児島", "沖縄",
 ];
 
-const faculties = [
-  "すべて",
-  "文学系",
-  "教育学系",
-  "法学系",
-  "経済学系",
-  "商学系",
-  "理学系",
-  "工学系",
-  "農学系",
-  "医学系",
-  "歯学系",
-  "薬学系",
-  "看護学系",
-  "社会学系",
-  "外国語学系",
-  "芸術学系",
-  "情報学系",
-  "環境学系",
-  "人間学系",
-  "スポーツ学系",
+const genreOptions = [
+  'すべて',
+  '情報系',
+  '経済系',
 ];
 
 export default function DetailSearchPanel({ filters, setFilters }) {
@@ -59,10 +42,10 @@ export default function DetailSearchPanel({ filters, setFilters }) {
 
       <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel>学部・学科</InputLabel>
-        <Select value={filters.faculty} label="系" onChange={handleChange("faculty")}>
-          {faculties.map((f) => (
-            <MenuItem key={f} value={f}>
-              {f}
+        <Select value={filters.genre} label="系" onChange={handleChange("genre")}>
+          {genreOptions.map((g) => (
+            <MenuItem key={g} value={g}>
+              {g}
             </MenuItem>
           ))}
         </Select>
