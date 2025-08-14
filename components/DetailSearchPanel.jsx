@@ -6,6 +6,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Stack,
 } from "@mui/material";
 
 const allPrefectures = [
@@ -98,40 +99,40 @@ export default function DetailSearchPanel({ filters, setFilters }) {
   };
 
   return (
-    <Paper sx={{ p: 2 }}>
-      <Typography variant="h6" gutterBottom>
+    <Paper sx={{ backgroundColor: "#fff", p: 2 }}>
+      {/* <Typography variant="h6" gutterBottom>
         詳細検索
-      </Typography>
-
-      <FormControl fullWidth sx={{ mb: 2 }}>
-        <InputLabel>都道府県</InputLabel>
-        <Select
-          value={filters.prefecture}
-          label="都道府県"
-          onChange={handleChange("prefecture")}
-        >
-          {allPrefectures.map((pref) => (
-            <MenuItem key={pref} value={pref}>
-              {pref}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-
-      <FormControl fullWidth sx={{ mb: 2 }}>
-        <InputLabel>学部・学科ジャンル</InputLabel>
-        <Select
-          value={filters.courseGenre}
-          label="ジャンル"
-          onChange={handleChange("courseGenre")}
-        >
-          {genreOptions.map((g) => (
-            <MenuItem key={g} value={g}>
-              {g}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      </Typography> */}
+      <Stack direction="row" spacing={2}>
+        <FormControl sx={{ minWidth: 180 }}>
+          <InputLabel>都道府県</InputLabel>
+          <Select
+            value={filters.prefecture}
+            label="都道府県"
+            onChange={handleChange("prefecture")}
+          >
+            {allPrefectures.map((pref) => (
+              <MenuItem key={pref} value={pref}>
+                {pref}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl sx={{ minWidth: 180 }}>
+          <InputLabel>学部・学科ジャンル</InputLabel>
+          <Select
+            value={filters.courseGenre}
+            label="ジャンル"
+            onChange={handleChange("courseGenre")}
+          >
+            {genreOptions.map((g) => (
+              <MenuItem key={g} value={g}>
+                {g}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Stack>
     </Paper>
   );
 }

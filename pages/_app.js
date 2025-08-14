@@ -5,9 +5,12 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <>
       <CssBaseline />
-      <div style={{ backgroundColor: "#cccccc", minHeight: "100vh" }}>
-        <Component {...pageProps} />
-      </div>
+      <style jsx global>{`
+        body {
+          background: #e0e0e0;
+        }
+      `}</style>
+      <Component {...pageProps} />
     </>
   );
 }

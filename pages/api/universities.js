@@ -22,12 +22,16 @@ export default function handler(req, res) {
     const facultyName = record["学部名"];
     const departmentName = record["学科名"];
     const departmentGenre = record["学科ジャンル"];
-    const location = record["所在地"].replace("県", ""); // '神奈川県' -> '神奈川'
+    let location = record["所在地"];
+    if (location === "北海道") {
+      // 北海道はそのまま
+    } else {
+      location = location.replace(/[県府都道]/g, "");
+    }
 
     if (!universitiesData[universityName]) {
       universitiesData[universityName] = {
         name: universityName,
-        region: location,
         faculties: {},
       };
     }
@@ -46,17 +50,35 @@ export default function handler(req, res) {
     universitiesData[universityName].faculties[facultyName].push({
       name: departmentName,
       genre: departmentGenre,
+      region: location, // 各学科ごとにregionを持たせる
       倍率: 倍率,
     });
   });
 
   let filteredUniversities = Object.values(universitiesData);
 
-  // 都道府県でフィルタリング
+  // 都道府県でフィルタリング（学科単位でregionを判定）
   if (prefecture && prefecture !== "すべて") {
-    filteredUniversities = filteredUniversities.filter(
-      (u) => u.region === prefecture
-    );
+    filteredUniversities = filteredUniversities
+      .map((u) => {
+        // 各学部の学科ごとにregionでフィルタ
+        const filteredFaculties = {};
+        Object.entries(u.faculties).forEach(([facultyName, departments]) => {
+          const filteredDepartments = departments.filter((dept) => {
+            const regions = dept.region.split(/[、,\/]/).map((s) => s.trim());
+            return regions.includes(prefecture);
+          });
+          if (filteredDepartments.length > 0) {
+            filteredFaculties[facultyName] = filteredDepartments;
+          }
+        });
+        if (Object.keys(filteredFaculties).length > 0) {
+          return { ...u, faculties: filteredFaculties };
+        } else {
+          return null;
+        }
+      })
+      .filter(Boolean);
   }
 
   // 学部ジャンルでフィルタリング
