@@ -103,8 +103,12 @@ export default function DetailSearchPanel({ filters, setFilters }) {
       {/* <Typography variant="h6" gutterBottom>
         詳細検索
       </Typography> */}
-      <Stack direction="row" spacing={2}>
-        <FormControl sx={{ minWidth: 180 }}>
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={{ xs: 2, sm: 2 }}
+        sx={{ width: "100%" }}
+      >
+        <FormControl sx={{ minWidth: { sm: 180 }, width: "100%" }}>
           <InputLabel>都道府県</InputLabel>
           <Select
             value={filters.prefecture}
@@ -118,7 +122,7 @@ export default function DetailSearchPanel({ filters, setFilters }) {
             ))}
           </Select>
         </FormControl>
-        <FormControl sx={{ minWidth: 180 }}>
+        <FormControl sx={{ minWidth: { sm: 180 }, width: "100%" }}>
           <InputLabel>学部・学科ジャンル</InputLabel>
           <Select
             value={filters.courseGenre}
