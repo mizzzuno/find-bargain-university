@@ -10,11 +10,14 @@ import {
   TableSortLabel,
 } from "@mui/material";
 
-const YEARS = ["2020", "2021", "2022", "2023", "2024"];
+const YEARS = ["2022", "2023", "2024"];
 
 function descendingComparator(a, b, orderBy) {
   if (orderBy === "name") {
     return b.name.localeCompare(a.name);
+  }
+  if (orderBy === "region") {
+    return (b.region || "").localeCompare(a.region || "");
   }
   return (b.倍率[orderBy] ?? 0) - (a.倍率[orderBy] ?? 0);
 }
@@ -48,9 +51,9 @@ export default function CourseTable({ courses }) {
   const sortedCourses = stableSort(courses, getComparator(order, orderBy));
 
   return (
-    <Paper sx={{ p: 2 }}>
+    <Paper sx={{ backgroundColor: "#fff", p: 2, boxShadow: 3 }}>
       <Typography variant="h6" gutterBottom>
-        学科・コース別 過去5年倍率比較
+        学科・コース別 過去3年倍率比較
       </Typography>
 
       <Table>
@@ -65,7 +68,19 @@ export default function CourseTable({ courses }) {
                 大学・学科・コース名
               </TableSortLabel>
             </TableCell>
-
+            <TableCell
+              sortDirection={orderBy === "region" ? order : false}
+              align="center"
+            >
+              <TableSortLabel
+                active={orderBy === "region"}
+                direction={orderBy === "region" ? order : "asc"}
+                onClick={() => handleRequestSort("region")}
+              >
+                キャンパス所在地
+              </TableSortLabel>
+            </TableCell>
+            <TableCell align="center">ジャンル</TableCell>
             {YEARS.map((year) => (
               <TableCell
                 key={year}
@@ -86,17 +101,30 @@ export default function CourseTable({ courses }) {
 
         <TableBody>
           {sortedCourses.map((course) => (
-            <TableRow key={course.key}>
+            <TableRow key={course.key || course.name}>
               <TableCell>{course.name}</TableCell>
+              <TableCell align="center">{course.region || "-"}</TableCell>
+              <TableCell align="center">{course.genre || "-"}</TableCell>
               {YEARS.map((year) => {
                 const rate = course.倍率[year];
+                let bgcolor = "inherit";
+                let fontWeight = "normal";
+                if (rate === undefined) {
+                  bgcolor = "#b3d8fd"; // データなしも青
+                } else if (rate <= 1.0) {
+                  bgcolor = "#b3d8fd"; // 青
+                  fontWeight = "bold";
+                } else if (rate <= 1.5) {
+                  bgcolor = "#d0f0c0"; // 緑
+                  fontWeight = "bold";
+                }
                 return (
                   <TableCell
                     key={year}
                     align="center"
                     sx={{
-                      bgcolor: rate !== undefined && rate <= 1.5 ? "#d0f0c0" : "inherit",
-                      fontWeight: rate !== undefined && rate <= 1.5 ? "bold" : "normal",
+                      bgcolor,
+                      fontWeight,
                     }}
                   >
                     {rate ?? "-"}

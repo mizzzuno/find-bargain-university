@@ -41,6 +41,8 @@ export default function Home() {
                 key: `${uni.name}_${facultyName}_${course.name}`,
                 name: `${uni.name} / ${facultyName} / ${course.name}`,
                 倍率: course.倍率,
+                region: course.region || "-",
+                genre: course.genre || "-",
               });
             });
         });
@@ -55,17 +57,53 @@ export default function Home() {
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
-        公募推薦 志望校発見サイト
+        東海大学 公募推薦 倍率チェッカー
+      </Typography>
+      <Typography variant="body1" sx={{ mb: 2 }}>
+        公式倍率データ：
+        <a
+          href="/data/official_data/2022.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          2022年度
+        </a>{" "}
+        ／
+        <a
+          href="/data/official_data/2023.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          2023年度
+        </a>{" "}
+        ／
+        <a
+          href="/data/official_data/2024.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          2024年度
+        </a>
       </Typography>
 
-      <Grid container spacing={2}>
+      <Grid
+        container
+        spacing={2}
+        justifyContent="center"
+        alignItems="flex-start"
+      >
         {/* 詳細検索パネル */}
         <Grid item xs={12} md={3}>
           <DetailSearchPanel filters={filters} setFilters={setFilters} />
         </Grid>
 
         {/* 結果テーブル */}
-        <Grid item xs={12} md={9}>
+        <Grid
+          item
+          xs={12}
+          md={9}
+          sx={{ display: "flex", justifyContent: "center" }}
+        >
           {courses.length > 0 ? (
             <CourseTable courses={courses} />
           ) : (
