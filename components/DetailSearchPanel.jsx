@@ -99,14 +99,18 @@ export default function DetailSearchPanel({ filters, setFilters }) {
   };
 
   return (
-    <Paper sx={{ backgroundColor: "#fff", p: 2 }}>
+    <Paper sx={{ backgroundColor: "#fff", p: 2, mb: 2 }}>
       {/* <Typography variant="h6" gutterBottom>
         詳細検索
       </Typography> */}
       <Stack
-        direction={{ xs: "column", sm: "row" }}
-        spacing={{ xs: 2, sm: 2 }}
-        sx={{ width: "100%" }}
+        direction="row"
+        spacing={{ xs: 1, sm: 2 }}
+        sx={{
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
         <FormControl sx={{ minWidth: { sm: 180 }, width: "100%" }}>
           <InputLabel>都道府県</InputLabel>
