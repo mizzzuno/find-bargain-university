@@ -27,13 +27,22 @@ export default function Home() {
       const flattened = [];
       data.forEach((uni) => {
         Object.entries(uni.faculties).forEach(([facultyName, courses]) => {
-          courses.filter(course => filters.courseGenre === "すべて" || course.genre === filters.courseGenre).forEach((course) => {
-            flattened.push({
-              key: `${uni.name}_${facultyName}_${course.name}`,
-              name: `${uni.name} / ${facultyName} / ${course.name}`,
-              倍率: course.倍率,
+          courses
+            .filter((course) => {
+              if (filters.courseGenre === "すべて") return true;
+              // ジャンルを「/」で分割し、いずれかが一致すればOK
+              return course.genre
+                .split(/[、,\/]/)
+                .map((s) => s.trim())
+                .includes(filters.courseGenre);
+            })
+            .forEach((course) => {
+              flattened.push({
+                key: `${uni.name}_${facultyName}_${course.name}`,
+                name: `${uni.name} / ${facultyName} / ${course.name}`,
+                倍率: course.倍率,
+              });
             });
-          });
         });
       });
       setCourses(flattened);
