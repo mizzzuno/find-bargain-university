@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Paper,
   Typography,
@@ -42,6 +42,53 @@ function stableSort(array, comparator) {
 export default function CourseTable({ courses }) {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("name");
+  const [showScrollHint, setShowScrollHint] = useState(true);
+  const [hasScrolled, setHasScrolled] = useState(false);
+  const scrollContainerRef = useRef(null);
+
+  // スマホ画面での横スクロールヒントを管理
+  useEffect(() => {
+    // 初期化時のスクロールイベントを無視するための遅延
+    let isInitialized = false;
+    const initTimer = setTimeout(() => {
+      isInitialized = true;
+    }, 500);
+
+    const handleScroll = () => {
+      if (!isInitialized) return;
+
+      if (
+        scrollContainerRef.current &&
+        scrollContainerRef.current.scrollLeft > 20 &&
+        !hasScrolled
+      ) {
+        setHasScrolled(true);
+        setShowScrollHint(false);
+      }
+    };
+
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll, { passive: true });
+      return () => {
+        clearTimeout(initTimer);
+        container.removeEventListener("scroll", handleScroll);
+      };
+    }
+
+    return () => clearTimeout(initTimer);
+  }, [hasScrolled]);
+
+  // 5秒後にヒントを自動的に非表示
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowScrollHint(false);
+    }, 5000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []); // 空の依存配列で初回のみ実行
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -113,13 +160,110 @@ export default function CourseTable({ courses }) {
         学科・コース別 過去3年倍率比較
       </Typography>
 
+      {/* 凡例 */}
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 2,
+          mb: 2,
+          px: { xs: 2, sm: 0 },
+          justifyContent: { xs: "center", sm: "flex-start" },
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <Box
+            sx={{
+              width: 16,
+              height: 16,
+              bgcolor: "#b3d8fd",
+              border: "1px solid #ddd",
+            }}
+          />
+          <Typography variant="body2">青: 倍率1倍(受験者全員合格)</Typography>
+        </Box>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <Box
+            sx={{
+              width: 16,
+              height: 16,
+              bgcolor: "#d0f0c0",
+              border: "1px solid #ddd",
+            }}
+          />
+          <Typography variant="body2">緑: 倍率1.5倍</Typography>
+        </Box>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <Box
+            sx={{
+              width: 16,
+              height: 16,
+              bgcolor: "#ffcccb",
+              border: "1px solid #ddd",
+            }}
+          />
+          <Typography variant="body2">赤: それ以上</Typography>
+        </Box>
+      </Box>
+
       <div
+        ref={scrollContainerRef}
         style={{
           overflowX: "auto",
           width: "100%",
           WebkitOverflowScrolling: "touch",
+          position: "relative",
         }}
       >
+        {/* スマホでの横スクロールヒント */}
+        {showScrollHint && !hasScrolled && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: "80px", // 固定の位置（テーブルヘッダーの少し下）
+              right: "15px",
+              zIndex: 1000,
+              display: { xs: "flex", sm: "none" },
+              alignItems: "center",
+              gap: 1,
+              backgroundColor: "rgba(0, 0, 0, 0.8)",
+              color: "white",
+              padding: "10px 15px",
+              borderRadius: "25px",
+              fontSize: "0.8rem",
+              fontWeight: "bold",
+              pointerEvents: "none",
+              boxShadow: "0 4px 15px rgba(0,0,0,0.4)",
+              border: "1px solid rgba(255,255,255,0.3)",
+              backdropFilter: "blur(4px)",
+            }}
+          >
+            <span>右にスワイプ</span>
+            <span
+              style={{
+                display: "inline-block",
+                animation: "arrowBounce 1.5s ease-in-out infinite",
+                marginLeft: "4px",
+                fontSize: "1rem",
+              }}
+            >
+              👉
+            </span>
+          </Box>
+        )}
+
+        <style>
+          {`
+            @keyframes arrowBounce {
+              0%, 100% { 
+                transform: translateX(0px);
+              }
+              50% { 
+                transform: translateX(8px);
+              }
+            }
+          `}
+        </style>
         <Table
           sx={{
             minWidth: 700,
@@ -235,6 +379,9 @@ export default function CourseTable({ courses }) {
                     fontWeight = "bold";
                   } else if (rate <= 1.5) {
                     bgcolor = "#d0f0c0"; // 緑
+                    fontWeight = "bold";
+                  } else {
+                    bgcolor = "#ffcccb"; // 赤
                     fontWeight = "bold";
                   }
                   return (
