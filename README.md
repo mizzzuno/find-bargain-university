@@ -1,39 +1,116 @@
-## 作成中...
+# 東海大学 公募推薦 倍率チェッカー
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+東海大学の公募推薦入試の過去 3 年間の倍率を比較できる Web アプリケーションです。
 
-## Getting Started
+## 機能
 
-First, run the development server:
+- 学科・コース別の過去 3 年間（2022-2024 年度）の倍率比較
+- 都道府県・学科ジャンルによるフィルタリング機能
+- レスポンシブデザイン（スマートフォン対応）
+- 倍率による色分け表示（青：1 倍、緑：1.5 倍以下、赤：1.5 倍超）
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 技術スタック
+
+- **フレームワーク**: Next.js 15
+- **UI ライブラリ**: Material-UI (MUI)
+- **スタイリング**: Tailwind CSS + styled-jsx
+- **データ処理**: csv-parse
+- **言語**: JavaScript
+
+## プロジェクト構造
+
+```
+├── components/           # UIコンポーネント
+│   ├── CourseTable.jsx      # メインテーブル
+│   ├── DetailSearchPanel.jsx # 検索フィルターパネル
+│   ├── PageHeader.jsx       # ページヘッダー
+│   └── table/              # テーブル関連の小さなコンポーネント
+│       ├── ScrollHint.jsx     # スクロールヒント
+│       ├── TableLegend.jsx    # テーブル凡例
+│       └── UniversityNameCell.jsx # 大学名セル
+├── constants/           # 定数定義
+│   └── index.js            # アプリケーション全体の定数
+├── hooks/              # カスタムフック
+│   ├── useCourseData.js    # データ取得・管理フック
+│   └── useTableInteraction.js # テーブルインタラクション管理
+├── utils/              # ユーティリティ関数
+│   ├── dataHelpers.js      # データ処理ヘルパー
+│   └── tableHelpers.js     # テーブル処理ヘルパー
+├── pages/              # Next.jsページ
+│   ├── index.js           # メインページ
+│   └── api/              # APIエンドポイント
+│       └── universities.js  # 大学データAPI
+└── data/               # データファイル
+    ├── university_data.csv  # 大学データ（CSV）
+    └── official_data/      # 公式PDF資料
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 開発環境のセットアップ
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### 必要な環境
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Node.js 18 以上
+- npm, yarn, pnpm のいずれか
 
-## Learn More
+### インストールと起動
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# 依存関係のインストール
+npm install
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# 開発サーバーの起動
+npm run dev
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# ブラウザで http://localhost:3000 を開く
+```
 
-## Deploy on Vercel
+### その他のコマンド
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+# 本番ビルド
+npm run build
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# find-bargain-university
+# 本番サーバー起動
+npm start
+
+# リンティング
+npm run lint
+```
+
+## 機能説明
+
+### データフィルタリング
+
+- **都道府県**: キャンパス所在地での絞り込み
+- **学科ジャンル**: 学科の専門分野での絞り込み
+
+### テーブル機能
+
+- **ソート**: 大学名、キャンパス所在地、各年度の倍率でソート可能
+- **レスポンシブ**: スマートフォンでは横スクロール対応
+- **色分け**: 倍率の高さを視覚的に表示
+
+### パフォーマンス最適化
+
+- カスタムフックによる状態管理の最適化
+- コンポーネントの適切な分割
+- メモ化とコールバック最適化
+
+## リファクタリング内容
+
+このプロジェクトは以下の点でリファクタリングされています：
+
+1. **関心の分離**: ビジネスロジックと UI の分離
+2. **再利用性**: 小さなコンポーネントとユーティリティ関数
+3. **保守性**: 定数の一元管理、型安全性の向上
+4. **パフォーマンス**: カスタムフックによる最適化
+5. **テスタビリティ**: ピュア関数の増加、依存関係の整理
+
+## データソース
+
+- 東海大学公式発表の公募推薦入試倍率データ（2022-2024 年度）
+- データは `/data/university_data.csv` で管理
+
+## ライセンス
+
+このプロジェクトは MIT ライセンスの下で公開されています。

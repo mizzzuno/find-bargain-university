@@ -8,42 +8,7 @@ import {
   MenuItem,
   Stack,
 } from "@mui/material";
-
-// データに実際に存在する都道府県のみを含める
-const allPrefectures = ["すべて", "北海道", "東京", "神奈川", "静岡", "熊本"];
-
-const genreOptions = [
-  "すべて",
-  "体育",
-  "健康",
-  "化学",
-  "国際",
-  "宇宙",
-  "工学",
-  "建築",
-  "心理",
-  "情報",
-  "政治",
-  "教育",
-  "教養",
-  "数学",
-  "文学",
-  "文理融合",
-  "機械",
-  "歴史",
-  "法学",
-  "海洋",
-  "物理",
-  "生物",
-  "看護",
-  "社会",
-  "経営",
-  "経済",
-  "芸術",
-  "観光",
-  "農学",
-  "電気電子",
-];
+import { PREFECTURES, GENRE_OPTIONS } from "../constants";
 
 export default function DetailSearchPanel({ filters, setFilters }) {
   const handleChange = (key) => (event) => {
@@ -71,7 +36,7 @@ export default function DetailSearchPanel({ filters, setFilters }) {
             label="都道府県"
             onChange={handleChange("prefecture")}
           >
-            {allPrefectures.map((pref) => (
+            {PREFECTURES.map((pref) => (
               <MenuItem key={pref} value={pref}>
                 {pref}
               </MenuItem>
@@ -85,7 +50,7 @@ export default function DetailSearchPanel({ filters, setFilters }) {
             label="ジャンル"
             onChange={handleChange("courseGenre")}
           >
-            {genreOptions.map((g) => (
+            {GENRE_OPTIONS.map((g) => (
               <MenuItem key={g} value={g}>
                 {g}
               </MenuItem>
